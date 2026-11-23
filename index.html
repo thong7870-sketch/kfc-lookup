@@ -16,10 +16,10 @@
         <span class="bg-white text-[#E4002B] font-black text-xs px-2 py-1 rounded shadow">KFC</span>
         <div>
           <h1 class="font-bold text-base leading-tight">Tra cứu Thông tin Nhà hàng</h1>
-          <p class="text-[11px] text-red-100">KFC Vietnam - Hệ thống danh bạ trực tuyến</p>
+          <p class="text-[11px] text-red-100">KFC Vietnam - Danh bạ trực tuyến</p>
         </div>
       </div>
-      <label for="excelFallback" class="cursor-pointer bg-white text-[#E4002B] hover:bg-red-50 text-xs font-bold px-2.5 py-1.5 rounded-lg shadow active:scale-95 transition flex items-center space-x-1">
+      <label for="excelFallback" class="cursor-pointer bg-white text-[#E4002B] hover:bg-red-50 text-xs font-bold px-2.5 py-1.5 rounded-lg shadow active:scale-95 transition">
         <span>🔄 Cập nhật File</span>
       </label>
       <input type="file" id="excelFallback" accept=".xlsx, .xls, .csv" class="hidden">
@@ -28,7 +28,7 @@
 
   <main class="max-w-3xl mx-auto px-3 py-3 space-y-3">
 
-    <!-- SEARCH BAR -->
+    <!-- KHUNG TÌM KIẾM THEO MÃ VIẾT TẮT -->
     <div class="bg-white p-3.5 rounded-2xl shadow-sm border border-gray-100 space-y-2">
       <div class="relative">
         <input type="text" id="searchInput" autofocus value="PBT"
@@ -57,7 +57,7 @@
       return String(str).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
     }
 
-    // TỰ ĐỘNG TÌM ĐÚNG DÒNG TIÊU ĐỀ XANH LÁ (KHÔNG BỊ LỆCH CỘT)
+    // THUẬT TOÁN ĐỌC ĐÚNG DÒNG TIÊU ĐỀ
     function parseMatrix(matrix) {
       let headerIdx = -1;
       for (let i = 0; i < Math.min(matrix.length, 30); i++) {
@@ -95,7 +95,7 @@
       return records;
     }
 
-    // HIỂN THỊ ĐỦ VÀ ĐÚNG 100% CÁC TRƯỜNG
+    // HIỂN THỊ KẾT QUẢ
     function render() {
       const q = removeAccents(document.getElementById('searchInput').value);
       const clearBtn = document.getElementById('clearSearch');
@@ -107,8 +107,8 @@
       if (records.length === 0) {
         container.innerHTML = `
           <div class="bg-white p-8 rounded-2xl text-center border-2 border-dashed border-red-200">
-            <p class="text-[#E4002B] font-bold text-base mb-1">Đang kết nối dữ liệu nhà hàng...</p>
-            <p class="text-xs text-gray-500">Nếu đợi lâu, vui lòng đảm bảo bạn đã tải tệp <b>data.xlsx</b> lên GitHub.</p>
+            <p class="text-[#E4002B] font-bold text-base mb-1">Đang tải dữ liệu nhà hàng...</p>
+            <p class="text-xs text-gray-500">Đang đồng bộ từ tệp data.xlsx trên GitHub.</p>
           </div>`;
         countEl.innerText = '0';
         return;
@@ -124,7 +124,7 @@
       if (matched.length === 0) {
         container.innerHTML = `
           <div class="bg-white p-8 rounded-2xl text-center border border-dashed border-gray-300">
-            <p class="text-gray-400 text-sm">Không tìm thấy nhà hàng nào khớp với: <strong class="text-gray-700">"${document.getElementById('searchInput').value}"</strong></p>
+            <p class="text-gray-400 text-sm">Không tìm thấy nhà hàng nào khớp với mã: <strong class="text-gray-700">"${document.getElementById('searchInput').value}"</strong></p>
           </div>`;
         return;
       }
@@ -154,7 +154,7 @@
               </div>
             </div>
 
-            <!-- HIỂN THỊ ĐỦ 100% CÁC CỘT THEO ĐÚNG HÀNG TRONG BẢNG -->
+            <!-- HIỂN THỊ ĐỦ VÀ CHUẨN XÁC TẤT CẢ CÁC CỘT -->
             <div class="divide-y divide-gray-100 border border-gray-100 rounded-xl overflow-hidden bg-gray-50/50">
               ${headers.map(h => `
                 <div class="grid grid-cols-3 py-2 px-3 text-xs items-center hover:bg-white transition">
@@ -168,15 +168,14 @@
       }).join('');
     }
 
-    // TỰ ĐỘNG ĐỌC FILE DATA.XLSX TỪ GITHUB (HOẠT ĐỘNG TRÊN CẢ ĐIỆN THOẠI)
-    async function autoLoadGithubData() {
+    // TỰ ĐỘNG ĐỌC FILE DATA.XLSX TỪ GITHUB
+    async function loadDataFromGithub() {
       const statusEl = document.getElementById('statusText');
       try {
-        statusEl.innerHTML = "Trạng thái: <b class='text-amber-600'>Đang tải dữ liệu KFC...</b>";
+        statusEl.innerHTML = "Trạng thái: <b class='text-amber-600'>Đang kết nối dữ liệu KFC...</b>";
         
-        // Thêm timestamp để luôn lấy dữ liệu mới nhất, không bị trình duyệt lưu cache cũ
         const response = await fetch('./data.xlsx?v=' + Date.now());
-        if (!response.ok) throw new Error("Chưa tìm thấy file data.xlsx trên GitHub");
+        if (!response.ok) throw new Error("Chưa tìm thấy data.xlsx");
 
         const arrayBuffer = await response.arrayBuffer();
         const wb = XLSX.read(new Uint8Array(arrayBuffer), { type: 'array' });
@@ -198,16 +197,14 @@
         if (records.length > 0) {
           statusEl.innerHTML = `Trạng thái: <b class="text-emerald-600">● Đã sẵn sàng ${records.length} nhà hàng!</b>`;
           render();
-        } else {
-          statusEl.innerHTML = "Trạng thái: <b class='text-amber-600'>File data.xlsx chưa có dữ liệu hợp lệ</b>";
         }
       } catch (err) {
-        statusEl.innerHTML = `Trạng thái: <b class='text-red-600'>Chưa có file data.xlsx trên GitHub (Bấm nút 'Cập nhật File' để chọn file)</b>`;
+        statusEl.innerHTML = `Trạng thái: <b class='text-red-600'>Chưa có tệp data.xlsx trên GitHub (Bấm nút 'Cập nhật File' để nạp)</b>`;
         render();
       }
     }
 
-    // NÚT DỰ PHÒNG CẬP NHẬT FILE TRỰC TIẾP
+    // NÚT NẠP TRỰC TIẾP
     document.getElementById('excelFallback').addEventListener('change', function(e) {
       const file = e.target.files[0];
       if (!file) return;
@@ -229,7 +226,7 @@
 
         const matrix = XLSX.utils.sheet_to_json(targetSheet, { header: 1, defval: "" });
         parseMatrix(matrix);
-        document.getElementById('statusText').innerHTML = `Trạng thái: <b class="text-emerald-600">● Đã nạp ${records.length} nhà hàng từ file!</b>`;
+        document.getElementById('statusText').innerHTML = `Trạng thái: <b class="text-emerald-600">● Đã nạp ${records.length} nhà hàng!</b>`;
         render();
       };
       reader.readAsArrayBuffer(file);
@@ -242,8 +239,7 @@
       document.getElementById('searchInput').focus();
     });
 
-    // TỰ ĐỘNG CHẠY KHI MỞ TRANG
-    window.addEventListener('DOMContentLoaded', autoLoadGithubData);
+    window.addEventListener('DOMContentLoaded', loadDataFromGithub);
   </script>
 </body>
 </html>
