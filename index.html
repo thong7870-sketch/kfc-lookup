@@ -21,18 +21,18 @@
         <span class="bg-white text-[#E4002B] font-black text-xs px-2 py-1 rounded shadow">KFC</span>
         <div>
           <h1 class="font-bold text-base leading-tight">KFC Management & ROCC Analytics</h1>
-          <p class="text-[11px] text-red-100">Hệ thống Thống kê ROCC Chi tiết: Nhà hàng • AM • OM • Khu vực</p>
+          <p class="text-[11px] text-red-100">Tra cứu Nhà hàng, AM, OM, OD & Thống kê ROCC</p>
         </div>
       </div>
       <button onclick="toggleUploadModal()" class="bg-white text-[#E4002B] hover:bg-red-50 text-xs font-bold px-2.5 py-1.5 rounded-lg shadow active:scale-95 transition">
-        📂 Cập nhật File
+        📂 Nạp File trực tiếp
       </button>
     </div>
   </header>
 
   <main class="max-w-4xl mx-auto px-3 py-3 space-y-3">
 
-    <!-- THANH ĐIỀU HƯỚNG TAB CHẾ ĐỘ XEM (VIEW MODES) -->
+    <!-- 5 TAB CHUYỂN CHẾ ĐỘ XEM -->
     <div class="flex bg-white p-1 rounded-xl shadow-sm border border-gray-200 text-xs font-bold overflow-x-auto hide-scrollbar space-x-1">
       <button onclick="switchView('cards')" id="tabBtn-cards" class="view-tab flex-1 py-2 px-3 rounded-lg bg-[#E4002B] text-white transition shrink-0">
         🏢 Danh bạ & Thẻ CH
@@ -51,14 +51,14 @@
       </button>
     </div>
 
-    <!-- KHUNG TÌM KIẾM & BỘ LỌC ĐA TIÊU CHÍ -->
+    <!-- KHUNG TÌM KIẾM & BỘ LỌC ĐA TIÊU CHÍ (AM, OM, OD, KHU VỰC) -->
     <div class="bg-white p-3.5 rounded-2xl shadow-sm border border-gray-100 space-y-2.5">
       <div class="relative">
-        <input type="text" id="searchInput" autofocus value=""
-               placeholder="Gõ nhanh: Mã CH (VCT, PBT...), Tên nhà hàng, Tên AM, OM..."
+        <input type="text" id="searchInput" autofocus value="PBT"
+               placeholder="Gõ nhanh: Mã CH (PBT, VCT...), Tên nhà hàng, Tên AM, OM..."
                class="w-full bg-gray-50 text-base md:text-sm pl-9 pr-9 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#E4002B] focus:bg-white font-bold transition">
         <svg class="w-4 h-4 text-gray-400 absolute left-3 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-        <button id="clearSearch" class="hidden absolute right-3 top-2.5 text-gray-400 hover:text-gray-600 font-bold p-1">✕</button>
+        <button id="clearSearch" class="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600 font-bold p-1">✕</button>
       </div>
 
       <div class="grid grid-cols-2 md:grid-cols-4 gap-2 pt-1 text-xs">
@@ -89,7 +89,7 @@
       </div>
 
       <div class="flex items-center justify-between text-xs text-gray-500 pt-1 border-t border-gray-100">
-        <span id="statusText">Trạng thái: <b>Đang tải...</b></span>
+        <span id="statusText">Trạng thái: <b>Đang tải dữ liệu...</b></span>
         <button onclick="resetFilters()" class="text-xs text-gray-400 hover:text-[#E4002B] font-semibold underline">
           Xóa toàn bộ bộ lọc
         </button>
@@ -144,7 +144,7 @@
       </div>
     </div>
 
-    <!-- KHU VỰC HIỂN THỊ CHÍNH (THAY ĐỔI THEO TAB) -->
+    <!-- KHU VỰC HIỂN THỊ CHÍNH (THEO TAB) -->
     <div id="viewContainer">
       <!-- 1. CHẾ ĐỘ THẺ CHI TIẾT TỪNG NHÀ HÀNG -->
       <div id="view-cards" class="space-y-4"></div>
@@ -220,7 +220,7 @@
         </div>
       </div>
 
-      <!-- 5. BẢNG TỔNG HỢP PASS/FAIL 273 NHÀ HÀNG -->
+      <!-- 5. BẢNG TỔNG HỢP 273 NHÀ HÀNG -->
       <div id="view-stores" class="hidden bg-white p-3.5 rounded-2xl shadow-sm border border-gray-100 space-y-3">
         <h3 class="font-bold text-xs text-gray-800 uppercase tracking-wider flex items-center space-x-1.5 border-b pb-2">
           <span>📊 Bảng tổng hợp Kết quả ROCC từng Nhà hàng</span>
@@ -243,16 +243,15 @@
           </table>
         </div>
       </div>
-
     </div>
 
   </main>
 
-  <!-- POPUP NẠP FILE THỦ CÔNG (DỰ PHÒNG) -->
+  <!-- POPUP NẠP FILE THỦ CÔNG -->
   <div id="uploadModal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 hidden">
     <div class="bg-white w-full max-w-lg rounded-2xl p-4 space-y-3 shadow-2xl">
       <div class="flex justify-between items-center border-b pb-2">
-        <h3 class="font-bold text-sm text-gray-800">📂 Cập nhật tệp Excel trực tiếp</h3>
+        <h3 class="font-bold text-sm text-gray-800">📂 Nạp tệp Excel trực tiếp từ máy</h3>
         <button onclick="toggleUploadModal()" class="text-gray-400 text-lg font-bold">✕</button>
       </div>
       <div class="space-y-2 text-xs">
@@ -282,12 +281,6 @@
       document.getElementById('uploadModal').classList.toggle('hidden');
     }
 
-    function removeAccents(str) {
-      if (!str) return '';
-      return String(str).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
-    }
-
-    // CHUYỂN ĐỔI CHẾ ĐỘ XEM (TABS)
     function switchView(viewName) {
       currentView = viewName;
       document.querySelectorAll('.view-tab').forEach(btn => {
@@ -303,7 +296,12 @@
       render();
     }
 
-    // ĐỌC BẢNG DATA NHÀ HÀNG
+    function removeAccents(str) {
+      if (!str) return '';
+      return String(str).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+    }
+
+    // ĐỌC BẢNG DATA NHÀ HÀNG (data.xlsx)
     function parseStoreMatrix(matrix) {
       let headerIdx = -1;
       for (let i = 0; i < Math.min(matrix.length, 30); i++) {
@@ -339,7 +337,7 @@
       return stores;
     }
 
-    // ĐỌC BẢNG KẾT QUẢ ROCC
+    // ĐỌC BẢNG KẾT QUẢ ROCC (rocc.xlsx)
     function parseRoccMatrix(matrix) {
       let headerIdx = -1;
       for (let i = 0; i < Math.min(matrix.length, 15); i++) {
@@ -385,7 +383,6 @@
       return roccList;
     }
 
-    // ĐIỀN CÁC DROPDOWN FILTER
     function populateFilters() {
       const regionSet = new Set();
       const amSet = new Set();
@@ -396,4 +393,448 @@
         const reg = s["Khu vực"] || s["Khu Vực"] || s["Vùng"] || "";
         if (reg) regionSet.add(reg);
         const am = s["Zone AM"] || s["AM"] || s["Quản lý AM"] || "";
-      
+        if (am) amSet.add(am);
+        const om = s["Zone OM"] || s["OM"] || s["Quản lý OM"] || "";
+        if (om) omSet.add(om);
+        const od = s["Zone OD"] || s["OD"] || s["Zone QC"] || s["Zone OL"] || s["QC"] || "";
+        if (od) odSet.add(od);
+      });
+
+      roccList.forEach(r => { if (r.am) amSet.add(r.am); });
+
+      const fillOptions = (elId, set) => {
+        const select = document.getElementById(elId);
+        const currentVal = select.value;
+        const defaultText = select.options[0].text;
+        select.innerHTML = `<option value="ALL">${defaultText}</option>`;
+        Array.from(set).sort().forEach(val => {
+          select.innerHTML += `<option value="${val}">${val}</option>`;
+        });
+        if (set.has(currentVal)) select.value = currentVal;
+      };
+
+      fillOptions('filterRegion', regionSet);
+      fillOptions('filterAM', amSet);
+      fillOptions('filterOM', omSet);
+      fillOptions('filterOD', odSet);
+    }
+
+    function getStoreRoccStats(s) {
+      const code = removeAccents(s["Mã Nhà hàng"] || s["Mã Nhà hàn"] || s["Mã NH"] || "");
+      const name = removeAccents(s["Tên Nhà hàng"] || s["Tên nhà hàng"] || "");
+
+      const roccData = roccList.find(r => {
+        const rShort = removeAccents(r.shortCode);
+        const rName = removeAccents(r.storeName);
+        const r84 = removeAccents(r.storeCode84);
+        return (code && (rShort.includes(code) || code.includes(rShort))) ||
+               (name && (rName.includes(name) || name.includes(rName))) ||
+               (code && r84.includes(code));
+      });
+
+      let pass = 0, fail = 0, other = 0, audits = 0;
+      if (roccData) {
+        months.forEach(m => {
+          const res = (roccData.months[m] || '').toLowerCase().trim();
+          if (res === 'pass') { pass++; audits++; }
+          else if (res === 'fail') { fail++; audits++; }
+          else if (res.length > 0) { other++; audits++; }
+        });
+      }
+      const rate = audits > 0 ? Math.round((pass / audits) * 100) : 0;
+      return { roccData, pass, fail, other, audits, rate };
+    }
+
+    function updateRoccDashboard(filteredStores, scopeText) {
+      document.getElementById('scopeTitle').innerText = scopeText || "Toàn quốc";
+
+      let totalPass = 0, totalFail = 0, totalOther = 0, totalAudits = 0;
+
+      filteredStores.forEach(s => {
+        const stats = getStoreRoccStats(s);
+        totalPass += stats.pass;
+        totalFail += stats.fail;
+        totalOther += stats.other;
+        totalAudits += stats.audits;
+      });
+
+      const passRate = totalAudits > 0 ? Math.round((totalPass / totalAudits) * 100) : 0;
+      const failRate = totalAudits > 0 ? Math.round((totalFail / totalAudits) * 100) : 0;
+      const otherRate = totalAudits > 0 ? Math.round((totalOther / totalAudits) * 100) : 0;
+
+      document.getElementById('kpiTotalAudit').innerText = totalAudits;
+      document.getElementById('kpiStoreCount').innerText = filteredStores.length;
+      document.getElementById('kpiPass').innerText = totalPass;
+      document.getElementById('kpiPassRate').innerText = `${passRate}%`;
+      document.getElementById('kpiFail').innerText = totalFail;
+      document.getElementById('kpiFailRate').innerText = `${failRate}%`;
+      document.getElementById('kpiOther').innerText = totalOther;
+
+      document.getElementById('progressBarText').innerText = `${passRate}% Pass Rate`;
+      document.getElementById('progressBarPass').style.width = `${passRate}%`;
+      document.getElementById('progressBarFail').style.width = `${failRate}%`;
+      document.getElementById('progressBarOther').style.width = `${otherRate}%`;
+    }
+
+    function buildGroupStats(filteredStores, keyGetter) {
+      const map = {};
+      filteredStores.forEach(s => {
+        const groupKey = keyGetter(s) || "Chưa phân loại";
+        if (!map[groupKey]) {
+          map[groupKey] = { name: groupKey, stores: 0, audits: 0, pass: 0, fail: 0, other: 0 };
+        }
+        map[groupKey].stores++;
+        const st = getStoreRoccStats(s);
+        map[groupKey].audits += st.audits;
+        map[groupKey].pass += st.pass;
+        map[groupKey].fail += st.fail;
+        map[groupKey].other += st.other;
+      });
+
+      return Object.values(map).map(g => {
+        g.rate = g.audits > 0 ? Math.round((g.pass / g.audits) * 100) : 0;
+        return g;
+      }).sort((a, b) => b.rate - a.rate || b.audits - a.audits);
+    }
+
+    function render() {
+      const q = removeAccents(document.getElementById('searchInput').value);
+      document.getElementById('clearSearch').classList.toggle('hidden', q.length === 0);
+
+      const fRegion = document.getElementById('filterRegion').value;
+      const fAM = document.getElementById('filterAM').value;
+      const fOM = document.getElementById('filterOM').value;
+      const fOD = document.getElementById('filterOD').value;
+
+      if (stores.length === 0 && roccList.length === 0) return;
+
+      let scopeParts = [];
+      if (fRegion !== 'ALL') scopeParts.push(fRegion);
+      if (fAM !== 'ALL') scopeParts.push(`AM: ${fAM}`);
+      if (fOM !== 'ALL') scopeParts.push(`OM: ${fOM}`);
+      if (fOD !== 'ALL') scopeParts.push(`OD: ${fOD}`);
+      if (q) scopeParts.push(`"${document.getElementById('searchInput').value}"`);
+      const scopeText = scopeParts.length > 0 ? scopeParts.join(" • ") : "Toàn quốc";
+
+      const matchedStores = stores.filter(s => {
+        if (q && !Object.values(s).some(v => removeAccents(v).includes(q))) return false;
+        if (fRegion !== 'ALL') {
+          const reg = s["Khu vực"] || s["Khu Vực"] || s["Vùng"] || "";
+          if (reg !== fRegion) return false;
+        }
+        if (fAM !== 'ALL') {
+          const am = s["Zone AM"] || s["AM"] || s["Quản lý AM"] || "";
+          if (am !== fAM) return false;
+        }
+        if (fOM !== 'ALL') {
+          const om = s["Zone OM"] || s["OM"] || s["Quản lý OM"] || "";
+          if (om !== fOM) return false;
+        }
+        if (fOD !== 'ALL') {
+          const od = s["Zone OD"] || s["OD"] || s["Zone QC"] || s["Zone OL"] || s["QC"] || "";
+          if (od !== fOD) return false;
+        }
+        return true;
+      });
+
+      updateRoccDashboard(matchedStores, scopeText);
+
+      // 1. CARDS
+      if (currentView === 'cards') {
+        const container = document.getElementById('view-cards');
+        if (matchedStores.length === 0) {
+          container.innerHTML = `<div class="bg-white p-8 rounded-2xl text-center border border-dashed border-gray-300 text-gray-400 text-sm">Không tìm thấy nhà hàng nào phù hợp.</div>`;
+          return;
+        }
+
+        container.innerHTML = matchedStores.map((s, idx) => {
+          const name = s["Tên Nhà hàng"] || s["Tên nhà hàng"] || "KFC";
+          const code = s["Mã Nhà hàng"] || s["Mã Nhà hàn"] || s["Mã NH"] || "";
+          const fullCode = s["Mã NH đầy đủ"] || s["Mã NH đầy đ"] || "";
+          const phone = s["Số điện thoại"] || s["Số điện thoại RG"] || "";
+          const email = s["Email"] || "";
+          const st = getStoreRoccStats(s);
+          const rData = st.roccData;
+
+          return `
+            <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-200 space-y-3.5">
+              <div class="flex items-start justify-between border-b pb-2.5">
+                <div>
+                  <div class="flex items-center space-x-1.5">
+                    <span class="bg-[#E4002B] text-white font-black text-xs px-2.5 py-0.5 rounded shadow-sm">${code || `MÃ #${idx+1}`}</span>
+                    ${fullCode ? `<span class="text-xs text-gray-500 font-semibold">(${fullCode})</span>` : ''}
+                    ${rData ? `
+                      <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${st.rate >= 80 ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">
+                        ROCC: \${st.rate}% Pass (\${st.pass}/${st.audits})
+                      </span>
+                    ` : ''}
+                  </div>
+                  <h3 class="text-base font-bold text-gray-900 mt-1">${name}</h3>
+                </div>
+                <div class="flex flex-col items-end space-y-1">
+                  ${phone ? `<a href="tel:${phone}" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-2.5 py-1 rounded-lg shadow flex items-center space-x-1"><span>📞 ${phone}</span></a>` : ''}
+                  ${email ? `<span class="text-[11px] text-gray-500 bg-gray-100 px-2 py-0.5 rounded">✉️ ${email}</span>` : ''}
+                </div>
+              </div>
+
+              <!-- ROCC BOX -->
+              <div class="bg-gradient-to-br from-gray-50 to-red-50/30 p-3 rounded-xl border border-red-100 space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-[#E4002B]">🏆 KẾT QUẢ ĐÁNH GIÁ ROCC (12 THÁNG)</span>
+                  ${rData ? `<span class="text-[11px] bg-red-100 text-[#E4002B] font-bold px-2 py-0.5 rounded">Mã ROCC: ${rData.storeCode84 || rData.shortCode}</span>` : `<span class="text-[11px] text-gray-400 italic">Chưa có dữ liệu ROCC</span>`}
+                </div>
+                ${rData ? `
+                  <div class="text-[11px] text-gray-600 flex items-center justify-between border-b border-gray-200/60 pb-1.5">
+                    <span>AM phụ trách: <b>${rData.am || 'Chưa cập nhật'}</b></span>
+                    <span>Target FS: <b>${rData.fsTarget || '-'}</b></span>
+                  </div>
+                  <div class="overflow-x-auto pb-1">
+                    <table class="w-full text-center border-collapse text-[10px]">
+                      <thead>
+                        <tr class="bg-gray-200/70 text-gray-700 font-bold">
+                          ${months.map(m => `<th class="p-1 border border-gray-300">${m}</th>`).join('')}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="bg-white">
+                          ${months.map(m => {
+                            const val = rData.months[m] || '';
+                            let colorClass = 'text-gray-300';
+                            if (val.toLowerCase() === 'pass') colorClass = 'bg-emerald-100 text-emerald-800 font-bold';
+                            else if (val.toLowerCase() === 'fail') colorClass = 'bg-red-200 text-red-900 font-bold';
+                            else if (val.toLowerCase().includes('re_a pass')) colorClass = 'bg-blue-100 text-blue-700 font-bold';
+                            else if (val.toLowerCase().includes('emergency') || val.toLowerCase().includes('weev')) colorClass = 'bg-amber-200 text-red-700 font-bold';
+                            return `<td class="p-1.5 border border-gray-200 ${colorClass}">${val || '-'}</td>`;
+                          }).join('')}
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                ` : `<p class="text-xs text-gray-400 italic text-center py-2">Chưa có kết quả audit ROCC tương ứng.</p>`}
+              </div>
+
+              <!-- TOÀN BỘ CỘT CỦA CỬA HÀNG -->
+              <div class="divide-y divide-gray-100 border border-gray-100 rounded-xl overflow-hidden bg-gray-50/50">
+                ${storeHeaders.map(h => `
+                  <div class="grid grid-cols-3 py-2 px-3 text-xs items-center hover:bg-white transition">
+                    <span class="text-gray-500 font-medium col-span-1">${h.name}</span>
+                    <span class="text-gray-900 font-bold col-span-2 \${h.name.includes('Mã') || h.name.includes('Tên') ? 'text-[#E4002B]' : ''}">\${s[h.name] || '-'}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // 2. VIEW AM
+      else if (currentView === 'am') {
+        const amStats = buildGroupStats(matchedStores, s => s["Zone AM"] || s["AM"] || s["Quản lý AM"]);
+        document.getElementById('tableBody-am').innerHTML = amStats.map((g, idx) => `
+          <tr class="hover:bg-red-50/40 transition">
+            <td class="p-2.5 font-bold text-gray-400">${idx + 1}</td>
+            <td class="p-2.5 font-bold text-gray-900">${g.name}</td>
+            <td class="p-2.5 text-center font-semibold">${g.stores}</td>
+            <td class="p-2.5 text-center font-bold">${g.audits}</td>
+            <td class="p-2.5 text-center text-emerald-700 font-bold bg-emerald-50/50">${g.pass}</td>
+            <td class="p-2.5 text-center text-[#E4002B] font-bold bg-red-50/50">${g.fail}</td>
+            <td class="p-2.5 text-center">
+              <span class="px-2 py-0.5 rounded-full font-bold ${g.rate >= 80 ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">
+                ${g.rate}%
+              </span>
+            </td>
+            <td class="p-2.5 text-center">
+              <button onclick="filterByGroup('filterAM', '${g.name}')" class="text-xs bg-[#E4002B] text-white px-2 py-1 rounded shadow hover:bg-red-700 font-medium">
+                Xem ${g.stores} CH
+              </button>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      // 3. VIEW OM
+      else if (currentView === 'om') {
+        const omStats = buildGroupStats(matchedStores, s => s["Zone OM"] || s["OM"] || s["Quản lý OM"]);
+        document.getElementById('tableBody-om').innerHTML = omStats.map((g, idx) => `
+          <tr class="hover:bg-red-50/40 transition">
+            <td class="p-2.5 font-bold text-gray-400">${idx + 1}</td>
+            <td class="p-2.5 font-bold text-gray-900">${g.name}</td>
+            <td class="p-2.5 text-center font-semibold">${g.stores}</td>
+            <td class="p-2.5 text-center font-bold">${g.audits}</td>
+            <td class="p-2.5 text-center text-emerald-700 font-bold bg-emerald-50/50">${g.pass}</td>
+            <td class="p-2.5 text-center text-[#E4002B] font-bold bg-red-50/50">${g.fail}</td>
+            <td class="p-2.5 text-center">
+              <span class="px-2 py-0.5 rounded-full font-bold ${g.rate >= 80 ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">
+                ${g.rate}%
+              </span>
+            </td>
+            <td class="p-2.5 text-center">
+              <button onclick="filterByGroup('filterOM', '${g.name}')" class="text-xs bg-[#E4002B] text-white px-2 py-1 rounded shadow hover:bg-red-700 font-medium">
+                Xem ${g.stores} CH
+              </button>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      // 4. VIEW REGION
+      else if (currentView === 'region') {
+        const regStats = buildGroupStats(matchedStores, s => s["Khu vực"] || s["Khu Vực"] || s["Vùng"]);
+        document.getElementById('tableBody-region').innerHTML = regStats.map((g, idx) => `
+          <tr class="hover:bg-red-50/40 transition">
+            <td class="p-2.5 font-bold text-gray-900">${g.name}</td>
+            <td class="p-2.5 text-center font-semibold">${g.stores}</td>
+            <td class="p-2.5 text-center font-bold">${g.audits}</td>
+            <td class="p-2.5 text-center text-emerald-700 font-bold bg-emerald-50/50">${g.pass}</td>
+            <td class="p-2.5 text-center text-[#E4002B] font-bold bg-red-50/50">${g.fail}</td>
+            <td class="p-2.5 text-center">
+              <span class="px-2.5 py-1 rounded-full font-bold ${g.rate >= 80 ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">
+                ${g.rate}% Pass
+              </span>
+            </td>
+            <td class="p-2.5 text-center">
+              <button onclick="filterByGroup('filterRegion', '${g.name}')" class="text-xs bg-[#E4002B] text-white px-2 py-1 rounded shadow hover:bg-red-700 font-medium">
+                Xem ${g.stores} CH
+              </button>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      // 5. VIEW STORES
+      else if (currentView === 'stores') {
+        document.getElementById('tableBody-stores').innerHTML = matchedStores.map((s, idx) => {
+          const name = s["Tên Nhà hàng"] || s["Tên nhà hàng"] || "KFC";
+          const code = s["Mã Nhà hàng"] || s["Mã Nhà hàn"] || s["Mã NH"] || "";
+          const am = s["Zone AM"] || s["AM"] || "-";
+          const st = getStoreRoccStats(s);
+
+          return `
+            <tr class="hover:bg-red-50/30 transition">
+              <td class="p-2 font-bold text-[#E4002B]">${code}</td>
+              <td class="p-2 font-semibold text-gray-900">${name}</td>
+              <td class="p-2 text-gray-600">${am}</td>
+              <td class="p-2 text-center font-bold">${st.audits}</td>
+              <td class="p-2 text-center text-emerald-700 font-bold">${st.pass}</td>
+              <td class="p-2 text-center text-[#E4002B] font-bold">${st.fail}</td>
+              <td class="p-2 text-center">
+                ${st.audits > 0 ? `
+                  <span class="px-2 py-0.5 rounded-full font-bold ${st.rate >= 80 ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">
+                    ${st.rate}%
+                  </span>
+                ` : `<span class="text-gray-300">-</span>`}
+              </td>
+              <td class="p-2 text-center">
+                <button onclick="inspectStore('${code}')" class="text-[11px] bg-gray-100 hover:bg-[#E4002B] hover:text-white px-2 py-0.5 rounded transition font-medium">
+                  Chi tiết
+                </button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+    }
+
+    function filterByGroup(filterId, val) {
+      document.getElementById(filterId).value = val;
+      switchView('cards');
+    }
+
+    function inspectStore(code) {
+      document.getElementById('searchInput').value = code;
+      switchView('cards');
+    }
+
+    function resetFilters() {
+      document.getElementById('searchInput').value = '';
+      document.getElementById('filterRegion').value = 'ALL';
+      document.getElementById('filterAM').value = 'ALL';
+      document.getElementById('filterOM').value = 'ALL';
+      document.getElementById('filterOD').value = 'ALL';
+      render();
+    }
+
+    // TỰ ĐỘNG THỬ MỌI TÊN TỆP EXCEL CÓ THỂ CÓ TRÊN GITHUB
+    async function tryFetchExcel(possibleNames) {
+      for (const name of possibleNames) {
+        try {
+          const res = await fetch('./' + encodeURIComponent(name) + '?v=' + Date.now());
+          if (res.ok) {
+            const buf = await res.arrayBuffer();
+            if (buf.byteLength > 100) return buf;
+          }
+        } catch(e) {}
+      }
+      return null;
+    }
+
+    async function autoLoadAllGithubFiles() {
+      const statusEl = document.getElementById('statusText');
+      statusEl.innerHTML = "Trạng thái: <b class='text-amber-600'>Đang tải dữ liệu...</b>";
+
+      // 1. Tìm tệp Danh bạ Nhà hàng
+      const storeFileNames = [
+        'data.xlsx', 'data.xls',
+        'data 20112026 .xlsx.xlsx', 'data 20112026.xlsx', 'data 20112026 .xlsx',
+        'DATA NHA HANG, AM, DIA CHI (20.11.2026).xlsx'
+      ];
+      const storeBuf = await tryFetchExcel(storeFileNames);
+      if (storeBuf) {
+        const wb = XLSX.read(new Uint8Array(storeBuf), { type: 'array' });
+        let targetSheet = wb.Sheets[wb.SheetNames[0]];
+        for (const sName of wb.SheetNames) {
+          const m = XLSX.utils.sheet_to_json(wb.Sheets[sName], { header: 1, defval: "" });
+          const txt = m.slice(0, 10).map(r => r.join(" ")).join(" ").toLowerCase();
+          if (txt.includes("tên nhà hàng") || txt.includes("mã nhà hàng")) {
+            targetSheet = wb.Sheets[sName];
+            break;
+          }
+        }
+        parseStoreMatrix(XLSX.utils.sheet_to_json(targetSheet, { header: 1, defval: "" }));
+      }
+
+      // 2. Tìm tệp Kết quả ROCC
+      const roccFileNames = ['rocc.xlsx', 'rocc.xls', 'ROCC.xlsx', 'ket qua rocc.xlsx'];
+      const roccBuf = await tryFetchExcel(roccFileNames);
+      if (roccBuf) {
+        const wb = XLSX.read(new Uint8Array(roccBuf), { type: 'array' });
+        parseRoccMatrix(XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1, defval: "" }));
+      }
+
+      if (stores.length > 0) {
+        statusEl.innerHTML = `Trạng thái: <b class="text-emerald-600">● Đã sẵn sàng ${stores.length} nhà hàng ${roccList.length > 0 ? `+ ${roccList.length} bài ROCC` : ''}!</b>`;
+      } else {
+        statusEl.innerHTML = "Trạng thái: <b class='text-red-600'>Chưa tải được data.xlsx (Bấm nút 'Nạp File trực tiếp' ở trên)</b>";
+      }
+      render();
+    }
+
+    document.getElementById('searchInput').addEventListener('input', render);
+    document.getElementById('filterRegion').addEventListener('change', render);
+    document.getElementById('filterAM').addEventListener('change', render);
+    document.getElementById('filterOM').addEventListener('change', render);
+    document.getElementById('filterOD').addEventListener('change', render);
+    document.getElementById('clearSearch').addEventListener('click', () => {
+      document.getElementById('searchInput').value = '';
+      render();
+      document.getElementById('searchInput').focus();
+    });
+
+    document.getElementById('localStoreFile').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const r = new FileReader();
+      r.onload = (evt) => {
+        const wb = XLSX.read(new Uint8Array(evt.target.result), { type: 'array' });
+        parseStoreMatrix(XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1, defval: "" }));
+        render();
+      };
+      r.readAsArrayBuffer(file);
+    });
+
+    document.getElementById('localRoccFile').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const r = new FileReader();
+      r.onload = (evt) => {
+        const wb = XLSX.read(new Uint8Arra
