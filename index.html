@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>KFC Store Directory & ROCC - Tra cứu Nhà hàng & Đánh giá ROCC</title>
+  <title>KFC Management & ROCC Analytics</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <style>
@@ -14,14 +14,14 @@
 </head>
 <body class="bg-gray-100 text-gray-800 font-sans pb-16">
 
-  <!-- HEADER NGUYÊN BẢN CỦA KFC -->
+  <!-- HEADER -->
   <header class="bg-[#E4002B] text-white shadow-md sticky top-0 z-30">
     <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
       <div class="flex items-center space-x-2">
         <span class="bg-white text-[#E4002B] font-black text-xs px-2 py-1 rounded shadow">KFC</span>
         <div>
-          <h1 class="font-bold text-base leading-tight">Tra cứu Thông tin Nhà hàng</h1>
-          <p class="text-[11px] text-red-100">KFC Vietnam - Danh bạ Nhà hàng & Đánh giá ROCC</p>
+          <h1 class="font-bold text-base leading-tight">Tra cứu Thông tin & ROCC Dashboard</h1>
+          <p class="text-[11px] text-red-100">KFC Vietnam - Quản lý Nhà hàng, AM, OM, OD</p>
         </div>
       </div>
       <button onclick="toggleUploadBox()" class="bg-white text-[#E4002B] hover:bg-red-50 text-xs font-bold px-3 py-1.5 rounded-lg shadow active:scale-95 transition">
@@ -32,66 +32,66 @@
 
   <main class="max-w-4xl mx-auto px-3 py-3 space-y-3">
 
-    <!-- KHUNG NẠP DỮ LIỆU ĐẦY ĐỦ (EXCEL NHÀ HÀNG + TỆP ROCC) -->
+    <!-- KHUNG TẢI DỮ LIỆU TRỰC TIẾP TRÊN WEB (TỰ ĐỘNG GHI ĐÈ FILE MỚI) -->
     <div id="uploadBox" class="bg-white p-4 rounded-2xl shadow-sm border border-red-100 space-y-3">
       <div class="flex items-center justify-between border-b pb-2">
         <h3 class="font-bold text-xs text-gray-800 uppercase tracking-wider">
-          📥 Nạp dữ liệu vào ứng dụng:
+          📥 Nạp tệp dữ liệu mới nhất (Ghi đè bản cũ):
         </h3>
         <button onclick="toggleUploadBox()" class="text-gray-400 hover:text-gray-600 text-xs font-bold">Ẩn</button>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
         <div class="p-3 bg-red-50/50 rounded-xl border border-red-100 space-y-2">
           <p class="font-bold text-gray-800">1. Tệp Danh bạ Nhà hàng (data.xlsx):</p>
-          <label for="excelStoreFile" class="cursor-pointer bg-[#E4002B] hover:bg-red-700 text-white font-bold py-2 px-3 rounded-xl shadow text-center block transition">
+          <label for="storeFileInput" class="cursor-pointer bg-[#E4002B] hover:bg-red-700 text-white font-bold py-2.5 px-3 rounded-xl shadow text-center block transition">
             📁 Chọn tệp Excel Nhà hàng (.xlsx)
           </label>
-          <input type="file" id="excelStoreFile" accept=".xlsx, .xls, .csv" class="hidden">
-          <p class="text-[11px] text-gray-500 italic">Dữ liệu nhà hàng sẽ được lưu tự động trên máy.</p>
+          <input type="file" id="storeFileInput" accept=".xlsx, .xls, .csv" class="hidden">
+          <p id="storeFileStatus" class="text-[11px] text-gray-500 italic">Chưa nạp tệp</p>
         </div>
 
         <div class="p-3 bg-amber-50/50 rounded-xl border border-amber-100 space-y-2">
           <p class="font-bold text-amber-900">2. Tệp Kết quả ROCC (rocc.xlsx):</p>
-          <label for="excelRoccFile" class="cursor-pointer bg-amber-600 hover:bg-amber-700 text-white font-bold py-2 px-3 rounded-xl shadow text-center block transition">
+          <label for="roccFileInput" class="cursor-pointer bg-amber-600 hover:bg-amber-700 text-white font-bold py-2.5 px-3 rounded-xl shadow text-center block transition">
             🏆 Chọn tệp Excel Kết quả ROCC (.xlsx)
           </label>
-          <input type="file" id="excelRoccFile" accept=".xlsx, .xls, .csv" class="hidden">
-          <p class="text-[11px] text-gray-500 italic">Nhúng điểm số Pass/Fail 12 tháng vào từng nhà hàng.</p>
+          <input type="file" id="roccFileInput" accept=".xlsx, .xls, .csv" class="hidden">
+          <p id="roccFileStatus" class="text-[11px] text-gray-500 italic">Chưa nạp tệp</p>
         </div>
       </div>
     </div>
 
-    <!-- THANH CHUYỂN CHẾ ĐỘ XEM: DANH BẠ VS BÁO CÁO ROCC -->
+    <!-- THANH CHUYỂN CHẾ ĐỘ XEM: DANH BẠ VS THỐNG KÊ -->
     <div class="flex bg-white p-1 rounded-xl shadow-sm border border-gray-200 text-xs font-bold overflow-x-auto hide-scrollbar space-x-1">
       <button onclick="switchView('cards')" id="tabBtn-cards" class="view-tab flex-1 py-2 px-3 rounded-lg bg-[#E4002B] text-white transition shrink-0">
-        🏢 Danh bạ & Tra cứu
+        🏢 Danh bạ & Thẻ CH
       </button>
       <button onclick="switchView('am')" id="tabBtn-am" class="view-tab flex-1 py-2 px-3 rounded-lg text-gray-600 hover:bg-gray-100 transition shrink-0">
-        👔 Báo cáo theo AM
+        👔 Thống kê theo AM
       </button>
       <button onclick="switchView('om')" id="tabBtn-om" class="view-tab flex-1 py-2 px-3 rounded-lg text-gray-600 hover:bg-gray-100 transition shrink-0">
-        🎖️ Báo cáo theo OM
+        🎖️ Thống kê theo OM
       </button>
       <button onclick="switchView('region')" id="tabBtn-region" class="view-tab flex-1 py-2 px-3 rounded-lg text-gray-600 hover:bg-gray-100 transition shrink-0">
-        🗺️ Báo cáo Khu vực
+        🗺️ Thống kê Khu vực
       </button>
       <button onclick="switchView('stores')" id="tabBtn-stores" class="view-tab flex-1 py-2 px-3 rounded-lg text-gray-600 hover:bg-gray-100 transition shrink-0">
         📊 Bảng tổng hợp CH
       </button>
     </div>
 
-    <!-- KHUNG TÌM KIẾM CHÍNH (GIỮ NGUYÊN CHỨC NĂNG TRA CỨU CŨ) -->
+    <!-- KHUNG TÌM KIẾM THEO TÊN / VIẾT TẮT / AM / OM / OD -->
     <div class="bg-white p-3.5 rounded-2xl shadow-sm border border-gray-100 space-y-2.5">
       <div class="relative">
         <input type="text" id="searchInput" autofocus value="PBT"
-               placeholder="Gõ mã viết tắt (PBT, HAN-VOP2, VCT...) hoặc tên nhà hàng..."
+               placeholder="Gõ mã viết tắt (PBT, HAN-VOP2, VCT...), Tên nhà hàng, AM, OM, OD..."
                class="w-full bg-gray-50 text-base md:text-sm pl-9 pr-9 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#E4002B] focus:bg-white font-bold transition">
         <svg class="w-4 h-4 text-gray-400 absolute left-3 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
         <button id="clearSearch" class="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600 font-bold p-1">✕</button>
       </div>
 
-      <!-- HÀNG BỘ LỌC ĐA TIÊU CHÍ (AM, OM, OD, KHU VỰC) -->
+      <!-- BỘ LỌC ĐA TIÊU CHÍ -->
       <div class="grid grid-cols-2 md:grid-cols-4 gap-2 pt-1 text-xs">
         <div>
           <label class="block text-[10px] text-gray-400 font-bold mb-0.5 uppercase">Khu vực</label>
@@ -120,16 +120,16 @@
       </div>
 
       <div class="flex items-center justify-between text-xs text-gray-500 pt-1 border-t border-gray-100">
-        <span id="statusText">Trạng thái: <b>Đang chuẩn bị dữ liệu...</b></span>
+        <span id="statusText">Trạng thái: <b>Đang tải...</b></span>
         <span>Tìm thấy: <b id="countText" class="text-[#E4002B]">0</b> kết quả</span>
       </div>
     </div>
 
-    <!-- DASHBOARD ROCC TỔNG QUAN -->
+    <!-- DASHBOARD THỐNG KÊ TỶ LỆ PASS / FAIL ROCC -->
     <div id="roccDashboardBox" class="bg-white p-3.5 rounded-2xl shadow-sm border border-gray-100 space-y-2.5">
       <div class="flex items-center justify-between border-b pb-1.5">
         <span class="text-xs font-bold uppercase tracking-wider text-gray-800 flex items-center space-x-1.5">
-          <span>📊 Thống kê ROCC: <span id="scopeTitle" class="text-[#E4002B]">Toàn quốc</span></span>
+          <span>📊 Thống kê ROCC cả năm: <span id="scopeTitle" class="text-[#E4002B]">Toàn quốc</span></span>
         </span>
         <span class="text-[11px] text-gray-400">Năm 2025</span>
       </div>
@@ -168,13 +168,13 @@
 
     <!-- KHU VỰC HIỂN THỊ KẾT QUẢ THEO VIEW -->
     <div id="viewContainer">
-      <!-- 1. CHẾ ĐỘ THẺ NHÀ HÀNG NGUYÊN BẢN (CARDS) -->
+      <!-- 1. THẺ CHI TIẾT TỪNG NHÀ HÀNG (CARDS NGUYÊN BẢN) -->
       <div id="view-cards" class="space-y-4"></div>
 
       <!-- 2. BẢNG BÁO CÁO THEO AM -->
       <div id="view-am" class="hidden bg-white p-3.5 rounded-2xl shadow-sm border border-gray-100 space-y-3">
         <h3 class="font-bold text-xs text-gray-800 uppercase tracking-wider border-b pb-2">
-          👔 Thống kê ROCC theo từng Quản lý AM
+          👔 Báo cáo Tỷ lệ Pass ROCC cả năm theo Quản lý AM
         </h3>
         <div class="overflow-x-auto pb-1">
           <table class="w-full text-xs text-left border-collapse">
@@ -186,8 +186,8 @@
                 <th class="p-2 text-center">Audit</th>
                 <th class="p-2 text-center text-emerald-700">Pass</th>
                 <th class="p-2 text-center text-red-600">Fail</th>
-                <th class="p-2 text-center">Tỷ lệ Pass</th>
-                <th class="p-2 text-center">Lọc</th>
+                <th class="p-2 text-center">Tỷ lệ Pass (%)</th>
+                <th class="p-2 text-center">Xem CH</th>
               </tr>
             </thead>
             <tbody id="tableBody-am" class="divide-y divide-gray-100"></tbody>
@@ -198,7 +198,7 @@
       <!-- 3. BẢNG BÁO CÁO THEO OM -->
       <div id="view-om" class="hidden bg-white p-3.5 rounded-2xl shadow-sm border border-gray-100 space-y-3">
         <h3 class="font-bold text-xs text-gray-800 uppercase tracking-wider border-b pb-2">
-          🎖️ Thống kê ROCC theo từng Quản lý OM
+          🎖️ Báo cáo Tỷ lệ Pass ROCC cả năm theo Quản lý OM
         </h3>
         <div class="overflow-x-auto pb-1">
           <table class="w-full text-xs text-left border-collapse">
@@ -210,8 +210,8 @@
                 <th class="p-2 text-center">Audit</th>
                 <th class="p-2 text-center text-emerald-700">Pass</th>
                 <th class="p-2 text-center text-red-600">Fail</th>
-                <th class="p-2 text-center">Tỷ lệ Pass</th>
-                <th class="p-2 text-center">Lọc</th>
+                <th class="p-2 text-center">Tỷ lệ Pass (%)</th>
+                <th class="p-2 text-center">Xem CH</th>
               </tr>
             </thead>
             <tbody id="tableBody-om" class="divide-y divide-gray-100"></tbody>
@@ -222,7 +222,7 @@
       <!-- 4. BẢNG BÁO CÁO THEO KHU VỰC -->
       <div id="view-region" class="hidden bg-white p-3.5 rounded-2xl shadow-sm border border-gray-100 space-y-3">
         <h3 class="font-bold text-xs text-gray-800 uppercase tracking-wider border-b pb-2">
-          🗺️ Thống kê ROCC giữa các Khu vực
+          🗺️ Thống kê Tỷ lệ Pass ROCC theo Khu vực
         </h3>
         <div class="overflow-x-auto pb-1">
           <table class="w-full text-xs text-left border-collapse">
@@ -233,8 +233,8 @@
                 <th class="p-2 text-center">Audit</th>
                 <th class="p-2 text-center text-emerald-700">Pass</th>
                 <th class="p-2 text-center text-red-600">Fail</th>
-                <th class="p-2 text-center">Tỷ lệ Pass</th>
-                <th class="p-2 text-center">Lọc</th>
+                <th class="p-2 text-center">Tỷ lệ Pass (%)</th>
+                <th class="p-2 text-center">Xem CH</th>
               </tr>
             </thead>
             <tbody id="tableBody-region" class="divide-y divide-gray-100"></tbody>
@@ -242,10 +242,10 @@
         </div>
       </div>
 
-      <!-- 5. BẢNG TỔNG HỢP CỬA HÀNG -->
+      <!-- 5. BẢNG TỔNG HỢP PASS/FAIL 273 NHÀ HÀNG -->
       <div id="view-stores" class="hidden bg-white p-3.5 rounded-2xl shadow-sm border border-gray-100 space-y-3">
         <h3 class="font-bold text-xs text-gray-800 uppercase tracking-wider border-b pb-2">
-          📊 Bảng Kết quả ROCC toàn bộ Nhà hàng
+          📊 Bảng Tổng hợp Tỷ lệ Pass/Fail ROCC cả năm của từng Nhà hàng
         </h3>
         <div class="overflow-x-auto pb-1">
           <table class="w-full text-xs text-left border-collapse">
@@ -257,8 +257,8 @@
                 <th class="p-2 text-center">Audit</th>
                 <th class="p-2 text-center text-emerald-700">Pass</th>
                 <th class="p-2 text-center text-red-600">Fail</th>
-                <th class="p-2 text-center">Tỷ lệ Pass</th>
-                <th class="p-2 text-center">Thẻ</th>
+                <th class="p-2 text-center">Tỷ lệ Pass (%)</th>
+                <th class="p-2 text-center">Xem thẻ</th>
               </tr>
             </thead>
             <tbody id="tableBody-stores" class="divide-y divide-gray-100"></tbody>
@@ -275,9 +275,9 @@
     let roccList = [];
     let currentView = 'cards';
 
-    const CACHE_STORE_DATA = 'KFC_STORES_CACHE_DATA_PRO';
-    const CACHE_STORE_COLS = 'KFC_STORES_CACHE_COLS_PRO';
-    const CACHE_ROCC_DATA  = 'KFC_ROCC_CACHE_DATA_PRO';
+    const CACHE_STORE_DATA = 'KFC_STORES_CACHE_DATA_FINAL';
+    const CACHE_STORE_COLS = 'KFC_STORES_CACHE_COLS_FINAL';
+    const CACHE_ROCC_DATA  = 'KFC_ROCC_CACHE_DATA_FINAL';
 
     const months = ["Jan-25", "Feb-25", "Mar-25", "Apr-25", "May-25", "Jun-25", "Jul-25", "Aug-25", "Sep-25", "Oct-25", "Nov-25", "Dec-25"];
 
@@ -400,4 +400,243 @@
       const regionSet = new Set();
       const amSet = new Set();
       const omSet = new Set();
-      const od
+      const odSet = new Set();
+
+      stores.forEach(s => {
+        const reg = s["Khu vực"] || s["Khu Vực"] || s["Vùng"] || "";
+        if (reg) regionSet.add(reg);
+        const am = s["Zone AM"] || s["AM"] || s["Quản lý AM"] || "";
+        if (am) amSet.add(am);
+        const om = s["Zone OM"] || s["OM"] || s["Quản lý OM"] || "";
+        if (om) omSet.add(om);
+        const od = s["Zone OD"] || s["OD"] || s["Zone QC"] || s["Zone OL"] || s["QC"] || "";
+        if (od) odSet.add(od);
+      });
+
+      roccList.forEach(r => { if (r.am) amSet.add(r.am); });
+
+      const fillOptions = (elId, set) => {
+        const select = document.getElementById(elId);
+        const currentVal = select.value;
+        const defaultText = select.options[0].text;
+        select.innerHTML = `<option value="ALL">${defaultText}</option>`;
+        Array.from(set).sort().forEach(val => {
+          select.innerHTML += `<option value="${val}">${val}</option>`;
+        });
+        if (set.has(currentVal)) select.value = currentVal;
+      };
+
+      fillOptions('filterRegion', regionSet);
+      fillOptions('filterAM', amSet);
+      fillOptions('filterOM', omSet);
+      fillOptions('filterOD', odSet);
+    }
+
+    // LIÊN KẾT NHÀ HÀNG VỚI KẾT QUẢ ROCC
+    function getStoreRoccStats(s) {
+      const code = removeAccents(s["Mã Nhà hàng"] || s["Mã Nhà hàn"] || s["Mã NH"] || "");
+      const name = removeAccents(s["Tên Nhà hàng"] || s["Tên nhà hàng"] || "");
+
+      const roccData = roccList.find(r => {
+        const rShort = removeAccents(r.shortCode);
+        const rName = removeAccents(r.storeName);
+        const r84 = removeAccents(r.storeCode84);
+        return (code && (rShort.includes(code) || code.includes(rShort))) ||
+               (name && (rName.includes(name) || name.includes(rName))) ||
+               (code && r84.includes(code));
+      });
+
+      let pass = 0, fail = 0, other = 0, audits = 0;
+      if (roccData) {
+        months.forEach(m => {
+          const res = (roccData.months[m] || '').toLowerCase().trim();
+          if (res === 'pass') { pass++; audits++; }
+          else if (res === 'fail') { fail++; audits++; }
+          else if (res.length > 0) { other++; audits++; }
+        });
+      }
+      const rate = audits > 0 ? Math.round((pass / audits) * 100) : 0;
+      return { roccData, pass, fail, other, audits, rate };
+    }
+
+    function updateRoccDashboard(filteredStores, scopeText) {
+      document.getElementById('scopeTitle').innerText = scopeText || "Toàn quốc";
+
+      let totalPass = 0, totalFail = 0, totalOther = 0, totalAudits = 0;
+
+      filteredStores.forEach(s => {
+        const stats = getStoreRoccStats(s);
+        totalPass += stats.pass;
+        totalFail += stats.fail;
+        totalOther += stats.other;
+        totalAudits += stats.audits;
+      });
+
+      const passRate = totalAudits > 0 ? Math.round((totalPass / totalAudits) * 100) : 0;
+      const failRate = totalAudits > 0 ? Math.round((totalFail / totalAudits) * 100) : 0;
+      const otherRate = totalAudits > 0 ? Math.round((totalOther / totalAudits) * 100) : 0;
+
+      document.getElementById('kpiTotalAudit').innerText = totalAudits;
+      document.getElementById('kpiPass').innerText = totalPass;
+      document.getElementById('kpiPassRate').innerText = `${passRate}%`;
+      document.getElementById('kpiFail').innerText = totalFail;
+      document.getElementById('kpiFailRate').innerText = `${failRate}%`;
+      document.getElementById('kpiOther').innerText = totalOther;
+
+      document.getElementById('progressBarText').innerText = `${passRate}% Pass Rate`;
+      document.getElementById('progressBarPass').style.width = `${passRate}%`;
+      document.getElementById('progressBarFail').style.width = `${failRate}%`;
+      document.getElementById('progressBarOther').style.width = `${otherRate}%`;
+    }
+
+    function buildGroupStats(filteredStores, keyGetter) {
+      const map = {};
+      filteredStores.forEach(s => {
+        const groupKey = keyGetter(s) || "Chưa phân loại";
+        if (!map[groupKey]) {
+          map[groupKey] = { name: groupKey, stores: 0, audits: 0, pass: 0, fail: 0, other: 0 };
+        }
+        map[groupKey].stores++;
+        const st = getStoreRoccStats(s);
+        map[groupKey].audits += st.audits;
+        map[groupKey].pass += st.pass;
+        map[groupKey].fail += st.fail;
+        map[groupKey].other += st.other;
+      });
+
+      return Object.values(map).map(g => {
+        g.rate = g.audits > 0 ? Math.round((g.pass / g.audits) * 100) : 0;
+        return g;
+      }).sort((a, b) => b.rate - a.rate || b.audits - a.audits);
+    }
+
+    // HIỂN THỊ KẾT QUẢ CHÍNH
+    function render() {
+      const q = removeAccents(document.getElementById('searchInput').value);
+      document.getElementById('clearSearch').classList.toggle('hidden', q.length === 0);
+
+      const fRegion = document.getElementById('filterRegion').value;
+      const fAM = document.getElementById('filterAM').value;
+      const fOM = document.getElementById('filterOM').value;
+      const fOD = document.getElementById('filterOD').value;
+
+      const container = document.getElementById('view-cards');
+      const countEl = document.getElementById('countText');
+
+      if (stores.length === 0) {
+        container.innerHTML = `
+          <div class="bg-white p-8 rounded-2xl text-center border-2 border-dashed border-red-200">
+            <p class="text-[#E4002B] font-bold text-base mb-1">Chưa có dữ liệu danh bạ nhà hàng!</p>
+            <p class="text-xs text-gray-500 mb-3">Vui lòng bấm nút <b>"📥 Nạp dữ liệu"</b> ở góc trên bên phải để nạp file Excel.</p>
+          </div>`;
+        countEl.innerText = '0';
+        return;
+      }
+
+      let scopeParts = [];
+      if (fRegion !== 'ALL') scopeParts.push(fRegion);
+      if (fAM !== 'ALL') scopeParts.push(`AM: ${fAM}`);
+      if (fOM !== 'ALL') scopeParts.push(`OM: ${fOM}`);
+      if (fOD !== 'ALL') scopeParts.push(`OD: ${fOD}`);
+      if (q) scopeParts.push(`"${document.getElementById('searchInput').value}"`);
+      const scopeText = scopeParts.length > 0 ? scopeParts.join(" • ") : "Toàn quốc";
+
+      // LỌC CỬA HÀNG
+      const matchedStores = stores.filter(s => {
+        if (q && !Object.values(s).some(v => removeAccents(v).includes(q))) return false;
+        if (fRegion !== 'ALL') {
+          const reg = s["Khu vực"] || s["Khu Vực"] || s["Vùng"] || "";
+          if (reg !== fRegion) return false;
+        }
+        if (fAM !== 'ALL') {
+          const am = s["Zone AM"] || s["AM"] || s["Quản lý AM"] || "";
+          if (am !== fAM) return false;
+        }
+        if (fOM !== 'ALL') {
+          const om = s["Zone OM"] || s["OM"] || s["Quản lý OM"] || "";
+          if (om !== fOM) return false;
+        }
+        if (fOD !== 'ALL') {
+          const od = s["Zone OD"] || s["OD"] || s["Zone QC"] || s["Zone OL"] || s["QC"] || "";
+          if (od !== fOD) return false;
+        }
+        return true;
+      });
+
+      countEl.innerText = matchedStores.length;
+      updateRoccDashboard(matchedStores, scopeText);
+
+      // 1. CARDS NGUYÊN BẢN CỦA BẠN
+      if (currentView === 'cards') {
+        if (matchedStores.length === 0) {
+          container.innerHTML = `
+            <div class="bg-white p-8 rounded-2xl text-center border border-dashed border-gray-300">
+              <p class="text-gray-400 text-sm">Không tìm thấy nhà hàng nào khớp với: <strong class="text-gray-700">"${document.getElementById('searchInput').value}"</strong></p>
+            </div>`;
+          return;
+        }
+
+        container.innerHTML = matchedStores.map((s, idx) => {
+          const name = s["Tên Nhà hàng"] || s["Tên nhà hàng"] || "Nhà hàng KFC";
+          const code = s["Mã Nhà hàng"] || s["Mã Nhà hàn"] || s["Mã NH"] || "";
+          const fullCode = s["Mã NH đầy đủ"] || s["Mã NH đầy đ"] || "";
+          const phone = s["Số điện thoại"] || s["Số điện thoại RG"] || "";
+          const email = s["Email"] || "";
+          const st = getStoreRoccStats(s);
+          const rData = st.roccData;
+
+          return `
+            <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-200 space-y-3.5">
+              <div class="flex items-start justify-between border-b pb-2.5">
+                <div>
+                  <div class="flex items-center space-x-1.5">
+                    <span class="bg-[#E4002B] text-white font-black text-xs px-2.5 py-0.5 rounded shadow-sm">${code || `MÃ #${idx+1}`}</span>
+                    ${fullCode ? `<span class="text-xs text-gray-500 font-semibold">(${fullCode})</span>` : ''}
+                    ${rData ? `
+                      <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${st.rate >= 80 ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">
+                        ROCC: \${st.rate}% Pass (\${st.pass}/${st.audits})
+                      </span>
+                    ` : ''}
+                  </div>
+                  <h3 class="text-base font-bold text-gray-900 mt-1">${name}</h3>
+                </div>
+                <div class="flex flex-col items-end space-y-1">
+                  ${phone ? `<a href="tel:${phone}" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-2.5 py-1 rounded-lg shadow flex items-center space-x-1"><span>📞 ${phone}</span></a>` : ''}
+                  ${email ? `<span class="text-[11px] text-gray-500 bg-gray-100 px-2 py-0.5 rounded">✉️ ${email}</span>` : ''}
+                </div>
+              </div>
+
+              <!-- ROCC BOX (NẾU CÓ DỮ LIỆU ROCC) -->
+              ${rData ? `
+                <div class="bg-gradient-to-br from-gray-50 to-red-50/30 p-3 rounded-xl border border-red-100 space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-[#E4002B]">🏆 KẾT QUẢ ĐÁNH GIÁ ROCC (12 THÁNG)</span>
+                    <span class="text-[11px] bg-red-100 text-[#E4002B] font-bold px-2 py-0.5 rounded">Mã ROCC: ${rData.storeCode84 || rData.shortCode}</span>
+                  </div>
+                  <div class="text-[11px] text-gray-600 flex items-center justify-between border-b border-gray-200/60 pb-1.5">
+                    <span>AM phụ trách: <b>${rData.am || 'Chưa cập nhật'}</b></span>
+                    <span>Chỉ tiêu FS: <b>${rData.fsTarget || '-'}</b></span>
+                  </div>
+                  <div class="overflow-x-auto pb-1">
+                    <table class="w-full text-center border-collapse text-[10px]">
+                      <thead>
+                        <tr class="bg-gray-200/70 text-gray-700 font-bold">
+                          ${months.map(m => `<th class="p-1 border border-gray-300">${m}</th>`).join('')}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="bg-white">
+                          ${months.map(m => {
+                            const val = rData.months[m] || '';
+                            let colorClass = 'text-gray-300';
+                            if (val.toLowerCase() === 'pass') colorClass = 'bg-emerald-100 text-emerald-800 font-bold';
+                            else if (val.toLowerCase() === 'fail') colorClass = 'bg-red-200 text-red-900 font-bold';
+                            else if (val.toLowerCase().includes('re_a pass')) colorClass = 'bg-blue-100 text-blue-700 font-bold';
+                            else if (val.toLowerCase().includes('emergency') || val.toLowerCase().includes('weev')) colorClass = 'bg-amber-200 text-red-700 font-bold';
+                            return `<td class="p-1.5 border border-gray-200 ${colorClass}">${val || '-'}</td>`;
+                          }).join('')}
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+               
